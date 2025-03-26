@@ -1,0 +1,80 @@
+# pathfindertest4
+# Platform: x86-64 Cygwin
+# Last modification date: 2024-12-12
+
+SHELL = /bin/sh
+
+# The following variable must be set
+# CXX
+# CXXFLAGS
+# LDFLAGS
+# OUTPUTDIR
+# EXESUFFIX
+
+STABINDIR = $(OUTPUTDIR)/sta-bin
+OBJDIR = $(OUTPUTDIR)/obj
+
+GENEXECPPFILES = \
+	ReCurPathFinderTest.cpp \
+	BTPathFinderTest.cpp \
+	PathFinderTest.cpp
+
+NOGENEXECPPFILES = 
+
+GENEXEOBJFILES = $(addprefix $(OBJDIR)/, $(GENEXECPPFILES:.cpp=.o))
+NOGENEXEOBJFILES = $(addprefix $(OBJDIR)/, $(NOGENEXECPPFILES:.cpp=.o))
+
+STAEXEFILES = $(addprefix $(STABINDIR)/, $(GENEXECPPFILES:.cpp=$(EXESUFFIX)))
+
+all: makeDirs $(GENEXEOBJFILES) $(NOGENEXEOBJFILES) $(STAEXEFILES)
+
+makeDirs:
+	@if [ ! -d $(OUTPUTDIR) ]; then \
+		echo "Creating $(OUTPUTDIR)..."; \
+		mkdir $(OUTPUTDIR); \
+	fi
+	@if [ ! -d $(OBJDIR) ]; then \
+		echo "Creating $(OBJDIR)..."; \
+		mkdir $(OBJDIR); \
+	fi
+	@if [ ! -d $(STABINDIR) ]; then \
+		echo "Creating $(STABINDIR)..."; \
+		mkdir $(STABINDIR); \
+	fi
+
+buildExes: $(STAEXEFILES)
+
+STAEXEFILES: $(GENEXEOBJFILES) $(NOGENEXEOBJFILES)
+
+compile: $(GENEXEOBJFILES) $(NOGENEXEOBJFILES)
+
+clean:
+	@if [ -d $(STABINDIR) ]; then \
+		echo "Removing $(STAEXEFILES)..."; \
+		rm $(STAEXEFILES); \
+		echo "Removing $(STABINDIR)..."; \
+		rmdir $(STABINDIR); \
+	fi
+
+	@if [ -d $(OBJDIR) ]; then \
+		echo "Removing $(GENEXEOBJFILES)..."; \
+		rm -f $(GENEXEOBJFILES); \
+		echo "Removing $(NOGENEXEOBJFILES)..."; \
+		rm -f $(NOGENEXEOBJFILES); \
+	fi
+	@if [ -d $(OBJDIR) ]; then \
+		echo "Removing $(OBJDIR)..."; \
+		rmdir $(OBJDIR); \
+	fi
+
+	@if [ -d $(OUTPUTDIR) ]; then \
+		echo "Removing $(OUTPUTDIR)..."; \
+		rmdir $(OUTPUTDIR); \
+	fi
+
+$(STABINDIR)/%$(EXESUFFIX): $(OBJDIR)/%.o
+	$(CXX) -o $@ $< $(NOGENEXEOBJFILES) $(STALDFLAGS)
+
+$(OBJDIR)/%.o: %.cpp
+	$(CXX) -c -o $@ $(CXXFLAGS) $<
+

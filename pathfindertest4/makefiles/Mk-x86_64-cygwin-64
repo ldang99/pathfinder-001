@@ -1,0 +1,57 @@
+# pathfindertest4
+# Platform: x86-64 Cygwin
+# Last modification date: 2024-12-12
+
+SHELL = /bin/sh
+
+CXX = g++
+
+OUTPUTDIR = ../x86_64-cygwin-64
+
+PATHFINDERLIBSRCDIR = ../../libpathfinder/src
+PATHFINDERIMPLLIBSRCDIR = ../../libpathfinderimpl/src
+PATHFINDERIMPL2LIBSRCDIR = ../../libpathfinderimpl2/src
+EXAMPLESLIBSRCDIR = ../../libexamples/src
+
+# Compiling flags:
+#   -Wall: Enable all warnings
+#   -D_FILE_OFFSET_BITS=64: 64-bit file system interface should be used
+#   -D_LARGE_FILES: Large file support
+#   -DUSE_OPENSSL: Use OpenSSL
+CXXFLAGS = \
+	-D_FILE_OFFSET_BITS=64 \
+	-D_LARGE_FILES \
+	-iquote $(PATHFINDERLIBSRCDIR) \
+	-iquote $(PATHFINDERIMPLLIBSRCDIR) \
+	-iquote $(PATHFINDERIMPL2LIBSRCDIR) \
+	-iquote $(EXAMPLESLIBSRCDIR) \
+	-Wall
+
+# Linking flags:
+STALDFLAGS = \
+	-L$(EXAMPLESLIBSRCDIR)/$(OUTPUTDIR)/sta-lib -lexamples \
+	-L$(PATHFINDERIMPLLIBSRCDIR)/$(OUTPUTDIR)/sta-lib -lpathfinderimpl \
+	-L$(PATHFINDERIMPL2LIBSRCDIR)/$(OUTPUTDIR)/sta-lib -lpathfinderimpl2 \
+	-L$(PATHFINDERLIBSRCDIR)/$(OUTPUTDIR)/sta-lib -lpathfinder
+
+DYNLDFLAGS = \
+	-L$(EXAMPLESLIBSRCDIR)/$(OUTPUTDIR)/dyn-lib -lexamples \
+	-L$(PATHFINDERIMPLLIBSRCDIR)/$(OUTPUTDIR)/dyn-lib -lpathfinderimpl \
+	-L$(PATHFINDERIMPL2LIBSRCDIR)/$(OUTPUTDIR)/dyn-lib -lpathfinderimpl2 \
+	-L$(PATHFINDERLIBSRCDIR)/$(OUTPUTDIR)/dyn-lib -lpathfinder
+
+EXESUFFIX = .exe
+
+all:
+	@echo "OUTPUTDIR: $(OUTPUTDIR)"
+	@echo "EXESUFFIX: $(EXESUFFIX)"
+	@echo "CXX: $(CXX)"
+	@echo "CXXFLAGS: $(CXXFLAGS)"
+	@echo "LDFLAGS: $(LDFLAGS)"
+	$(MAKE) -C ../src -f Makefile_common OUTPUTDIR='$(OUTPUTDIR)' EXESUFFIX='$(EXESUFFIX)' CXX='$(CXX)' CXXFLAGS="$(CXXFLAGS)" STALDFLAGS='$(STALDFLAGS)' DYNLDFLAGS='$(DYNLDFLAGS)'
+
+clean:
+	@echo "OUTPUTDIR: $(OUTPUTDIR)"
+	@echo "EXESUFFIX: $(EXESUFFIX)"
+	$(MAKE) -C ../src -f Makefile_common clean OUTPUTDIR='$(OUTPUTDIR)' EXESUFFIX='$(EXESUFFIX)'
+
