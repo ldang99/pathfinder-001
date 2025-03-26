@@ -1,0 +1,93 @@
+# libpathfinder
+# Last modification date: 2024-11-21
+
+SHELL = /bin/sh
+
+# The following variable must be set
+# OUTPUTDIR
+# CXX
+# CXXFLAGS
+# ARXOPTION
+# DYNLIBEXT
+
+STALIBDIR = $(OUTPUTDIR)/sta-lib
+DYNLIBDIR = $(OUTPUTDIR)/dyn-lib
+OBJDIR = $(OUTPUTDIR)/obj
+
+CPPFILES = \
+	Position.cpp \
+	Matrix.cpp \
+	Sequence.cpp \
+	PathFinder.cpp
+
+OBJFILES = $(addprefix $(OBJDIR)/, $(CPPFILES:.cpp=.o))
+
+STALIBFILE = $(STALIBDIR)/libpathfinder.a
+DYNLIBFILE = $(DYNLIBDIR)/pathfinder$(DYNLIBEXT)
+
+all: makeDirs buildLibs
+
+makeDirs:
+	@if [ ! -d $(OUTPUTDIR) ]; then \
+		echo "Creating $(OUTPUTDIR)..."; \
+		mkdir $(OUTPUTDIR); \
+	fi
+	@if [ ! -d $(STALIBDIR) ]; then \
+		echo "Creating $(STALIBDIR)..."; \
+		mkdir $(STALIBDIR); \
+	fi
+	@if [ ! -d $(DYNLIBDIR) ]; then \
+		echo "Creating $(DYNLIBDIR)..."; \
+		mkdir $(DYNLIBDIR); \
+	fi
+	@if [ ! -d $(OBJDIR) ]; then \
+		echo "Creating $(OBJDIR)..."; \
+		mkdir $(OBJDIR); \
+	fi
+
+buildLibs: $(STALIBFILE) $(DYNLIBFILE)
+
+compile: $(OBJFILES)
+
+clean:
+	@if [ -f $(STALIBFILE) ]; then \
+		echo "Removing $(STALIBFILE)..."; \
+		rm $(STALIBFILE); \
+	fi
+	@if [ -f $(DYNLIBFILE) ]; then \
+		echo "Removing $(DYNLIBFILE)..."; \
+		rm $(DYNLIBFILE); \
+	fi
+	@if [ -d $(OBJDIR) ]; then \
+		echo "Removing $(OBJFILES)..."; \
+		rm -f $(OBJFILES); \
+	fi
+
+	@if [ -d $(OBJDIR) ]; then \
+		echo "Removing $(OBJDIR)..."; \
+		rmdir $(OBJDIR); \
+	fi
+
+	@if [ -d $(STALIBDIR) ]; then \
+		echo "Removing $(STALIBDIR)..."; \
+		rmdir $(STALIBDIR); \
+	fi
+	@if [ -d $(DYNLIBDIR) ]; then \
+		echo "Removing $(DYNLIBDIR)..."; \
+		rmdir $(DYNLIBDIR); \
+	fi
+
+	@if [ -d $(OUTPUTDIR) ]; then \
+		echo "Removing $(OUTPUTDIR)..."; \
+		rmdir $(OUTPUTDIR); \
+	fi
+
+$(STALIBFILE): $(OBJFILES)
+	$(AR) $(ARXOPTION) cru $@ $(OBJFILES)
+
+$(DYNLIBFILE): $(OBJFILES)
+	$(CXX) -shared -o $@ $(OBJFILES)
+
+$(OBJDIR)/%.o: %.cpp %.hpp
+	$(CXX) -c -o $@ $(CXXFLAGS) $<
+
