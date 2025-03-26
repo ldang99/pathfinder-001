@@ -1,0 +1,44 @@
+# libpathfinderimpl
+# Platform: x86-64 Cygwin
+# Last modification date: 2024-11-21
+
+SHELL = /bin/sh
+
+OUTPUTDIR = ../x86_64-cygwin-64
+
+PATHFINDERLIBSRCDIR = ../../libpathfinder/src
+
+# Options for ar:
+ARXOPTION =
+
+DYNLIBEXT = .dll
+
+CXX = g++
+
+# Compiling flags:
+#   -D_FILE_OFFSET_BITS=64: 64-bit file system interface should be used
+#   -D_LARGE_FILES: 
+#   -Wall: Enable all warnings
+CXXFLAGS = \
+	-D_FILE_OFFSET_BITS=64 \
+	-D_LARGE_FILES \
+	-iquote $(PATHFINDERLIBSRCDIR) \
+	-Wall
+
+DYNLDFLAGS = \
+	-L$(PATHFINDERLIBSRCDIR)/$(OUTPUTDIR)/dyn-lib -lpathfinder
+	
+
+all:
+	@echo "OUTPUTDIR: $(OUTPUTDIR)"
+	@echo "CXX: $(CXX)"
+	@echo "CXXFLAGS: $(CXXFLAGS)"
+	@echo "ARXOPTION: $(ARXOPTION)"
+	@echo "DYNLIBEXT: $(DYNLIBEXT)"
+	$(MAKE) -C ../src -f Makefile_common OUTPUTDIR='$(OUTPUTDIR)' CXX='$(CXX)' CXXFLAGS='$(CXXFLAGS)' DYNLDFLAGS='$(DYNLDFLAGS)' ARXOPTION='$(ARXOPTION)' DYNLIBEXT='$(DYNLIBEXT)'
+
+clean:
+	@echo "OUTPUTDIR: $(OUTPUTDIR)"
+	@echo "DYNLIBEXT: $(DYNLIBEXT)"
+	$(MAKE) -C ../src -f Makefile_common clean OUTPUTDIR='$(OUTPUTDIR)' DYNLIBEXT='$(DYNLIBEXT)'
+
