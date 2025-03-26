@@ -44,7 +44,7 @@ int BTPathFinder::run() {
 		unsigned i = m_matrix.rowCount() - 1;
 		
 		do {
-			if (positions[i].column() < m_matrix.columnCount() - 1) {
+			if (positions[i].column() < positions[i].row()) {
 				if (i == 0) {
 					break; // found
 				} else {
@@ -61,7 +61,7 @@ int BTPathFinder::run() {
 					break;  // found
 				} else {
 					--i;
-						continue;
+					continue;
 				} // if-else
 			} // if
 		} while (true);
