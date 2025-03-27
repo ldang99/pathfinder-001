@@ -1,0 +1,11 @@
+- A square matrix (n X n) polulated with integer numbers.
+- A sequence satisfies the following things:
+	+ It connects some elements of the matrix.
+	+ The number of the elements in the sequence equals to the number of row of the matrix.
+	+ It starts from the element [1, 1] of the matrix.
+	+ The element [k] of the sequence is in the row [k] of the matrix.
+	+ The element [k] of the sequence with k > 1 and k < n is in the same column or in the next column with the element [k - 1].
+- The score of a sequence is the product of all its elements.
+
+Find a sequence with the highest score.
+

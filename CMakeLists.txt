@@ -63,7 +63,7 @@ target_include_directories(Examples PUBLIC libpathfinder/src PUBLIC libexamples/
 
 
 add_executable(ReCurPathFinderTest
-    pathfindertest4/src/ReCurPathFinderTest.cpp
+    pathfindertests/src/ReCurPathFinderTest.cpp
 )
 
 target_link_libraries(ReCurPathFinderTest PRIVATE Examples PRIVATE PathFinderImpl PRIVATE PathFinder)
@@ -71,7 +71,7 @@ set_target_properties(ReCurPathFinderTest PROPERTIES RUNTIME_OUTPUT_NAME "ReCurP
 target_include_directories(ReCurPathFinderTest PUBLIC libpathfinder/src PUBLIC libexamples/src)
 
 add_executable(BTPathFinderTest
-    pathfindertest4/src/BTPathFinderTest.cpp
+    pathfindertests/src/BTPathFinderTest.cpp
 )
 
 target_link_libraries(BTPathFinderTest PRIVATE Examples PRIVATE PathFinderImpl2 PRIVATE PathFinder)
@@ -79,7 +79,7 @@ set_target_properties(BTPathFinderTest PROPERTIES RUNTIME_OUTPUT_NAME "BTPathFin
 target_include_directories(ReCurPathFinderTest PUBLIC libpathfinder/src PUBLIC libexamples/src)
 
 add_executable(PathFinderTest
-    pathfindertest4/src/PathFinderTest.cpp
+    pathfindertests/src/PathFinderTest.cpp
 )
 
 target_link_libraries(PathFinderTest PRIVATE Examples PRIVATE PathFinderImpl PRIVATE PathFinder)
